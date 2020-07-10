@@ -434,4 +434,491 @@ namespace AudioReader
         WAVE_FORMAT_DEVELOPMENT = 0xFFFF,
     }
 
+    /// <summary>
+    /// MPEG Version Flags
+    /// </summary>
+    public enum MpegVersion
+    {
+        /// <summary>
+        /// Version 2.5
+        /// </summary>
+        Version25,
+        /// <summary>
+        /// Reserved
+        /// </summary>
+        Reserved,
+        /// <summary>
+        /// Version 2
+        /// </summary>
+        Version2,
+        /// <summary>
+        /// Version 1
+        /// </summary>
+        Version1
+    }
+
+    /// <summary>
+    /// MPEG Layer flags
+    /// </summary>
+    public enum MpegLayer
+    {
+        /// <summary>
+        /// Reserved
+        /// </summary>
+        Reserved,
+        /// <summary>
+        /// Layer 3
+        /// </summary>
+        Layer3,
+        /// <summary>
+        /// Layer 2
+        /// </summary>
+        Layer2,
+        /// <summary>
+        /// Layer 1
+        /// </summary>
+        Layer1
+    }
+
+    /// <summary>
+    /// Wave Format Padding Flags
+    /// </summary>
+    [Flags]
+    public enum Mp3WaveFormatFlags
+    {
+        /// <summary>
+        /// MPEGLAYER3_FLAG_PADDING_ISO
+        /// </summary>
+        PaddingIso = 0,
+        /// <summary>
+        /// MPEGLAYER3_FLAG_PADDING_ON
+        /// </summary>
+        PaddingOn = 1,
+        /// <summary>
+        /// MPEGLAYER3_FLAG_PADDING_OFF
+        /// </summary>
+        PaddingOff = 2,
+    }
+
+    /// <summary>
+    /// Wave Format ID
+    /// </summary>
+    public enum Mp3WaveFormatId : ushort
+    {
+        /// <summary>MPEGLAYER3_ID_UNKNOWN</summary>
+        Unknown = 0,
+        /// <summary>MPEGLAYER3_ID_MPEG</summary>
+        Mpeg = 1,
+        /// <summary>MPEGLAYER3_ID_CONSTANTFRAMESIZE</summary>
+        ConstantFrameSize = 2
+    }
+
+    /// <summary>
+    /// Channel Mode
+    /// </summary>
+    public enum ChannelMode
+    {
+        /// <summary>
+        /// Stereo
+        /// </summary>
+        Stereo,
+        /// <summary>
+        /// Joint Stereo
+        /// </summary>
+        JointStereo,
+        /// <summary>
+        /// Dual Channel
+        /// </summary>
+        DualChannel,
+        /// <summary>
+        /// Mono
+        /// </summary>
+        Mono
+    }
+
+    /// <summary>
+    /// Windows multimedia error codes from mmsystem.h.
+    /// </summary>
+    public enum MmResult
+    {
+        /// <summary>no error, MMSYSERR_NOERROR</summary>
+        NoError = 0,
+        /// <summary>unspecified error, MMSYSERR_ERROR</summary>
+        UnspecifiedError = 1,
+        /// <summary>device ID out of range, MMSYSERR_BADDEVICEID</summary>
+        BadDeviceId = 2,
+        /// <summary>driver failed enable, MMSYSERR_NOTENABLED</summary>
+        NotEnabled = 3,
+        /// <summary>device already allocated, MMSYSERR_ALLOCATED</summary>
+        AlreadyAllocated = 4,
+        /// <summary>device handle is invalid, MMSYSERR_INVALHANDLE</summary>
+        InvalidHandle = 5,
+        /// <summary>no device driver present, MMSYSERR_NODRIVER</summary>
+        NoDriver = 6,
+        /// <summary>memory allocation error, MMSYSERR_NOMEM</summary>
+        MemoryAllocationError = 7,
+        /// <summary>function isn't supported, MMSYSERR_NOTSUPPORTED</summary>
+        NotSupported = 8,
+        /// <summary>error value out of range, MMSYSERR_BADERRNUM</summary>
+        BadErrorNumber = 9,
+        /// <summary>invalid flag passed, MMSYSERR_INVALFLAG</summary>
+        InvalidFlag = 10,
+        /// <summary>invalid parameter passed, MMSYSERR_INVALPARAM</summary>
+        InvalidParameter = 11,
+        /// <summary>handle being used simultaneously on another thread (eg callback),MMSYSERR_HANDLEBUSY</summary>
+        HandleBusy = 12,
+        /// <summary>specified alias not found, MMSYSERR_INVALIDALIAS</summary>
+        InvalidAlias = 13,
+        /// <summary>bad registry database, MMSYSERR_BADDB</summary>
+        BadRegistryDatabase = 14,
+        /// <summary>registry key not found, MMSYSERR_KEYNOTFOUND</summary>
+        RegistryKeyNotFound = 15,
+        /// <summary>registry read error, MMSYSERR_READERROR</summary>
+        RegistryReadError = 16,
+        /// <summary>registry write error, MMSYSERR_WRITEERROR</summary>
+        RegistryWriteError = 17,
+        /// <summary>registry delete error, MMSYSERR_DELETEERROR</summary>
+        RegistryDeleteError = 18,
+        /// <summary>registry value not found, MMSYSERR_VALNOTFOUND</summary>
+        RegistryValueNotFound = 19,
+        /// <summary>driver does not call DriverCallback, MMSYSERR_NODRIVERCB</summary>
+        NoDriverCallback = 20,
+        /// <summary>more data to be returned, MMSYSERR_MOREDATA</summary>
+        MoreData = 21,
+
+        /// <summary>unsupported wave format, WAVERR_BADFORMAT</summary>
+        WaveBadFormat = 32,
+        /// <summary>still something playing, WAVERR_STILLPLAYING</summary>
+        WaveStillPlaying = 33,
+        /// <summary>header not prepared, WAVERR_UNPREPARED</summary>
+        WaveHeaderUnprepared = 34,
+        /// <summary>device is synchronous, WAVERR_SYNC</summary>
+        WaveSync = 35,
+
+        // ACM error codes, found in msacm.h
+
+        /// <summary>Conversion not possible (ACMERR_NOTPOSSIBLE)</summary>
+        AcmNotPossible = 512,
+        /// <summary>Busy (ACMERR_BUSY)</summary>
+        AcmBusy = 513,
+        /// <summary>Header Unprepared (ACMERR_UNPREPARED)</summary>
+        AcmHeaderUnprepared = 514,
+        /// <summary>Cancelled (ACMERR_CANCELED)</summary>
+        AcmCancelled = 515,
+
+        // Mixer error codes, found in mmresult.h
+
+        /// <summary>invalid line (MIXERR_INVALLINE)</summary>
+        MixerInvalidLine = 1024,
+        /// <summary>invalid control (MIXERR_INVALCONTROL)</summary>
+        MixerInvalidControl = 1025,
+        /// <summary>invalid value (MIXERR_INVALVALUE)</summary>
+        MixerInvalidValue = 1026,
+    }
+
+    /// <summary>
+    /// Flags for use with acmDriverAdd
+    /// </summary>
+    public enum AcmDriverAddFlags
+    {
+        // also ACM_DRIVERADDF_TYPEMASK   = 0x00000007;
+
+        /// <summary>
+        /// ACM_DRIVERADDF_LOCAL
+        /// </summary>
+        Local = 0,
+        /// <summary>
+        /// ACM_DRIVERADDF_GLOBAL
+        /// </summary>
+        Global = 8,
+        /// <summary>
+        /// ACM_DRIVERADDF_FUNCTION
+        /// </summary>
+        Function = 3,
+        /// <summary>
+        /// ACM_DRIVERADDF_NOTIFYHWND
+        /// </summary>
+        NotifyWindowHandle = 4,
+    }
+
+    [Flags]
+    enum AcmFormatSuggestFlags
+    {
+        /// <summary>
+        /// ACM_FORMATSUGGESTF_WFORMATTAG
+        /// </summary>
+        FormatTag = 0x00010000,
+        /// <summary>
+        /// ACM_FORMATSUGGESTF_NCHANNELS
+        /// </summary>
+        Channels = 0x00020000,
+        /// <summary>
+        /// ACM_FORMATSUGGESTF_NSAMPLESPERSEC
+        /// </summary>
+        SamplesPerSecond = 0x00040000,
+        /// <summary>
+        /// ACM_FORMATSUGGESTF_WBITSPERSAMPLE
+        /// </summary>
+        BitsPerSample = 0x00080000,
+        /// <summary>
+        /// ACM_FORMATSUGGESTF_TYPEMASK
+        /// </summary>
+        TypeMask = 0x00FF0000,
+    }
+
+    [Flags]
+    enum AcmStreamOpenFlags
+    {
+        /// <summary>
+        /// ACM_STREAMOPENF_QUERY, ACM will be queried to determine whether it supports the given conversion. A conversion stream will not be opened, and no handle will be returned in the phas parameter. 
+        /// </summary>
+        Query = 0x00000001,
+        /// <summary>
+        /// ACM_STREAMOPENF_ASYNC, Stream conversion should be performed asynchronously. If this flag is specified, the application can use a callback function to be notified when the conversion stream is opened and closed and after each buffer is converted. In addition to using a callback function, an application can examine the fdwStatus member of the ACMSTREAMHEADER structure for the ACMSTREAMHEADER_STATUSF_DONE flag. 
+        /// </summary>
+        Async = 0x00000002,
+        /// <summary>
+        /// ACM_STREAMOPENF_NONREALTIME, ACM will not consider time constraints when converting the data. By default, the driver will attempt to convert the data in real time. For some formats, specifying this flag might improve the audio quality or other characteristics.
+        /// </summary>
+        NonRealTime = 0x00000004,
+        /// <summary>
+        /// CALLBACK_TYPEMASK, callback type mask
+        /// </summary>
+        CallbackTypeMask = 0x00070000,
+        /// <summary>
+        /// CALLBACK_NULL, no callback
+        /// </summary>
+        CallbackNull = 0x00000000,
+        /// <summary>
+        /// CALLBACK_WINDOW, dwCallback is a HWND
+        /// </summary>
+        CallbackWindow = 0x00010000,
+        /// <summary>
+        /// CALLBACK_TASK, dwCallback is a HTASK
+        /// </summary>
+        CallbackTask = 0x00020000,
+        /// <summary>
+        /// CALLBACK_FUNCTION, dwCallback is a FARPROC
+        /// </summary>
+        CallbackFunction = 0x00030000,
+        /// <summary>
+        /// CALLBACK_THREAD, thread ID replaces 16 bit task
+        /// </summary>
+        CallbackThread = CallbackTask,
+        /// <summary>
+        /// CALLBACK_EVENT, dwCallback is an EVENT Handle
+        /// </summary>
+        CallbackEvent = 0x00050000,
+    }
+
+    /// <summary>
+    /// Flags indicating what support a particular ACM driver has
+    /// </summary>
+    [Flags]
+    public enum AcmDriverDetailsSupportFlags
+    {
+        /// <summary>ACMDRIVERDETAILS_SUPPORTF_CODEC - Codec</summary>
+        Codec = 0x00000001,
+        /// <summary>ACMDRIVERDETAILS_SUPPORTF_CONVERTER - Converter</summary>
+        Converter = 0x00000002,
+        /// <summary>ACMDRIVERDETAILS_SUPPORTF_FILTER - Filter</summary>
+        Filter = 0x00000004,
+        /// <summary>ACMDRIVERDETAILS_SUPPORTF_HARDWARE - Hardware</summary>
+        Hardware = 0x00000008,
+        /// <summary>ACMDRIVERDETAILS_SUPPORTF_ASYNC - Async</summary>
+        Async = 0x00000010,
+        /// <summary>ACMDRIVERDETAILS_SUPPORTF_LOCAL - Local</summary>
+        Local = 0x40000000,
+        /// <summary>ACMDRIVERDETAILS_SUPPORTF_DISABLED - Disabled</summary>
+        Disabled = unchecked((int)0x80000000),
+    }
+
+    enum AcmMetrics
+    {
+        /// <summary>ACM_METRIC_COUNT_DRIVERS</summary>
+        CountDrivers = 1,
+        /// <summary>ACM_METRIC_COUNT_CODECS</summary>
+        CountCodecs = 2,
+        /// <summary>ACM_METRIC_COUNT_CONVERTERS</summary>
+        CountConverters = 3,
+        /// <summary>ACM_METRIC_COUNT_FILTERS</summary>
+        CountFilters = 4,
+        /// <summary>ACM_METRIC_COUNT_DISABLED</summary>
+        CountDisabled = 5,
+        /// <summary>ACM_METRIC_COUNT_HARDWARE</summary>
+        CountHardware = 6,
+        /// <summary>ACM_METRIC_COUNT_LOCAL_DRIVERS</summary>
+        CountLocalDrivers = 20,
+        /// <summary>ACM_METRIC_COUNT_LOCAL_CODECS</summary>
+        CountLocalCodecs = 21,
+        /// <summary>ACM_METRIC_COUNT_LOCAL_CONVERTERS</summary>
+        CountLocalConverters = 22,
+        /// <summary>ACM_METRIC_COUNT_LOCAL_FILTERS</summary>
+        CountLocalFilters = 23,
+        /// <summary>ACM_METRIC_COUNT_LOCAL_DISABLED</summary>
+        CountLocalDisabled = 24,
+        /// <summary>ACM_METRIC_HARDWARE_WAVE_INPUT</summary>
+        HardwareWaveInput = 30,
+        /// <summary>ACM_METRIC_HARDWARE_WAVE_OUTPUT</summary>
+        HardwareWaveOutput = 31,
+        /// <summary>ACM_METRIC_MAX_SIZE_FORMAT</summary>
+        MaxSizeFormat = 50,
+        /// <summary>ACM_METRIC_MAX_SIZE_FILTER</summary>
+        MaxSizeFilter = 51,
+        /// <summary>ACM_METRIC_DRIVER_SUPPORT</summary>
+        DriverSupport = 100,
+        /// <summary>ACM_METRIC_DRIVER_PRIORITY</summary>
+        DriverPriority = 101,
+    }
+
+    enum AcmStreamSizeFlags
+    {
+        /// <summary>
+        /// ACM_STREAMSIZEF_SOURCE
+        /// </summary>
+        Source = 0x00000000,
+        /// <summary>
+        /// ACM_STREAMSIZEF_DESTINATION
+        /// </summary>
+        Destination = 0x00000001
+    }
+
+    [Flags]
+    enum AcmStreamConvertFlags
+    {
+        /// <summary>
+        /// ACM_STREAMCONVERTF_BLOCKALIGN
+        /// </summary>
+        BlockAlign = 0x00000004,
+        /// <summary>
+        /// ACM_STREAMCONVERTF_START
+        /// </summary>
+        Start = 0x00000010,
+        /// <summary>
+        /// ACM_STREAMCONVERTF_END
+        /// </summary>
+        End = 0x00000020,
+    }
+
+    [Flags]
+    enum AcmDriverEnumFlags
+    {
+        /// <summary>
+        /// ACM_DRIVERENUMF_NOLOCAL, Only global drivers should be included in the enumeration
+        /// </summary>
+        NoLocal = 0x40000000,
+        /// <summary>
+        /// ACM_DRIVERENUMF_DISABLED, Disabled ACM drivers should be included in the enumeration
+        /// </summary>
+        Disabled = unchecked((int)0x80000000),
+    }
+
+    [Flags]
+    enum AcmFormatChooseStyleFlags
+    {
+        /// <summary>
+        /// None
+        /// </summary>
+        None = 0,
+        /// <summary>
+        /// ACMFORMATCHOOSE_STYLEF_SHOWHELP
+        /// </summary>
+        ShowHelp = 0x00000004,
+        /// <summary>
+        /// ACMFORMATCHOOSE_STYLEF_ENABLEHOOK
+        /// </summary>
+        EnableHook = 0x00000008,
+        /// <summary>
+        /// ACMFORMATCHOOSE_STYLEF_ENABLETEMPLATE
+        /// </summary>
+        EnableTemplate = 0x00000010,
+        /// <summary>
+        /// ACMFORMATCHOOSE_STYLEF_ENABLETEMPLATEHANDLE
+        /// </summary>
+        EnableTemplateHandle = 0x00000020,
+        /// <summary>
+        /// ACMFORMATCHOOSE_STYLEF_INITTOWFXSTRUCT
+        /// </summary>
+        InitToWfxStruct = 0x00000040,
+        /// <summary>
+        /// ACMFORMATCHOOSE_STYLEF_CONTEXTHELP
+        /// </summary>
+        ContextHelp = 0x00000080
+    }
+
+    /// <summary>
+    /// Format Enumeration Flags
+    /// </summary>
+    [Flags]
+    public enum AcmFormatEnumFlags
+    {
+        /// <summary>
+        /// None
+        /// </summary>
+        None = 0,
+        /// <summary>
+        /// ACM_FORMATENUMF_CONVERT
+        /// The WAVEFORMATEX structure pointed to by the pwfx member of the ACMFORMATDETAILS structure is valid. The enumerator will only enumerate destination formats that can be converted from the given pwfx format. 
+        /// </summary>
+        Convert = 0x00100000,
+        /// <summary>
+        /// ACM_FORMATENUMF_HARDWARE
+        /// The enumerator should only enumerate formats that are supported as native input or output formats on one or more of the installed waveform-audio devices. This flag provides a way for an application to choose only formats native to an installed waveform-audio device. This flag must be used with one or both of the ACM_FORMATENUMF_INPUT and ACM_FORMATENUMF_OUTPUT flags. Specifying both ACM_FORMATENUMF_INPUT and ACM_FORMATENUMF_OUTPUT will enumerate only formats that can be opened for input or output. This is true regardless of whether this flag is specified. 
+        /// </summary>
+        Hardware = 0x00400000,
+        /// <summary>
+        /// ACM_FORMATENUMF_INPUT
+        /// Enumerator should enumerate only formats that are supported for input (recording). 
+        /// </summary>
+        Input = 0x00800000,
+        /// <summary>
+        /// ACM_FORMATENUMF_NCHANNELS 
+        /// The nChannels member of the WAVEFORMATEX structure pointed to by the pwfx member of the ACMFORMATDETAILS structure is valid. The enumerator will enumerate only a format that conforms to this attribute. 
+        /// </summary>
+        Channels = 0x00020000,
+        /// <summary>
+        /// ACM_FORMATENUMF_NSAMPLESPERSEC
+        /// The nSamplesPerSec member of the WAVEFORMATEX structure pointed to by the pwfx member of the ACMFORMATDETAILS structure is valid. The enumerator will enumerate only a format that conforms to this attribute. 
+        /// </summary>
+        SamplesPerSecond = 0x00040000,
+        /// <summary>
+        /// ACM_FORMATENUMF_OUTPUT 
+        /// Enumerator should enumerate only formats that are supported for output (playback). 
+        /// </summary>
+        Output = 0x01000000,
+        /// <summary>
+        /// ACM_FORMATENUMF_SUGGEST
+        /// The WAVEFORMATEX structure pointed to by the pwfx member of the ACMFORMATDETAILS structure is valid. The enumerator will enumerate all suggested destination formats for the given pwfx format. This mechanism can be used instead of the acmFormatSuggest function to allow an application to choose the best suggested format for conversion. The dwFormatIndex member will always be set to zero on return. 
+        /// </summary>
+        Suggest = 0x00200000,
+        /// <summary>
+        /// ACM_FORMATENUMF_WBITSPERSAMPLE
+        /// The wBitsPerSample member of the WAVEFORMATEX structure pointed to by the pwfx member of the ACMFORMATDETAILS structure is valid. The enumerator will enumerate only a format that conforms to this attribute. 
+        /// </summary>
+        BitsPerSample = 0x00080000,
+        /// <summary>
+        /// ACM_FORMATENUMF_WFORMATTAG
+        /// The wFormatTag member of the WAVEFORMATEX structure pointed to by the pwfx member of the ACMFORMATDETAILS structure is valid. The enumerator will enumerate only a format that conforms to this attribute. The dwFormatTag member of the ACMFORMATDETAILS structure must be equal to the wFormatTag member. 
+        /// </summary>
+        FormatTag = 0x00010000,
+    }
+
+    [Flags]
+    enum AcmStreamHeaderStatusFlags
+    {
+        /// <summary>
+        /// ACMSTREAMHEADER_STATUSF_DONE
+        /// </summary>
+        Done = 0x00010000,
+        /// <summary>
+        /// ACMSTREAMHEADER_STATUSF_PREPARED
+        /// </summary>
+        Prepared = 0x00020000,
+        /// <summary>
+        /// ACMSTREAMHEADER_STATUSF_INQUEUE
+        /// </summary>
+        InQueue = 0x00100000,
+    }
+
+
 }

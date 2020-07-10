@@ -3,8 +3,10 @@ using OpenToolkit.Audio.OpenAL;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using ARWaveFileReader = AudioReader.WaveFileReader;
+using ARWaveFileReader = AudioReader.WaveFileReader;//DOES NO PINVOKE SO ASSUMED TO BE XPLAT
 using NAWaveFileReader = NAudio.Wave.WaveFileReader;
+using ARMp3Reader = AudioReader.Mp3FileReader;//WINDOWS ONLY!!
+using NAMp3Reader = NAudio.Wave.Mp3FileReader;
 
 namespace OpenTKAudioPlayground
 {
@@ -27,11 +29,10 @@ namespace OpenTKAudioPlayground
 
             ALC.MakeContextCurrent(_context);
 
-
             _bufferId = AL.GenBuffers(1)[0];
             _sourceId = AL.GenSources(1)[0];
 
-            var reader = new ARWaveFileReader(fileName);
+            var reader = new ARMp3Reader(fileName);
 
             var bufferData = new byte[reader.Length];
 

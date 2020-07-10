@@ -17,9 +17,10 @@ namespace OpenTKAudioPlayground
         public static unsafe void Main(string[] args)
         {
 			var waveFilePath = $"{CONTENT_PATH}cyberpunk-beat.wav";
+			var mp3FilePath = $"{CONTENT_PATH}Where The Dead Ships Dwell.mp3";
 
 			var command = string.Empty;
-			var sound = new Sound(waveFilePath);
+			var sound = new Sound(mp3FilePath);
 
 			while(command != "q")
             {

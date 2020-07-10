@@ -25,6 +25,9 @@
     <None Update="Content\Sounds\cyberpunk-beat.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Sounds\Where The Dead Ships Dwell.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="openal32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
