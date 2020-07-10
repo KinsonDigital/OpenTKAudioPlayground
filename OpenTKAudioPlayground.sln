@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30225.117
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTKAudioPlayground", "OpenTKAudioPlayground\OpenTKAudioPlayground.csproj", "{03087A44-4DDC-45B2-AF18-FAB74D615318}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioReader", "AudioReader\AudioReader.csproj", "{F020F3FE-96C9-4861-BDE2-BD8A081B5DCF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{03087A44-4DDC-45B2-AF18-FAB74D615318}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03087A44-4DDC-45B2-AF18-FAB74D615318}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03087A44-4DDC-45B2-AF18-FAB74D615318}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03087A44-4DDC-45B2-AF18-FAB74D615318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F020F3FE-96C9-4861-BDE2-BD8A081B5DCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F020F3FE-96C9-4861-BDE2-BD8A081B5DCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F020F3FE-96C9-4861-BDE2-BD8A081B5DCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F020F3FE-96C9-4861-BDE2-BD8A081B5DCF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8BEEEFD2-EAAD-44C0-8129-DA6E18257DFC}
+	EndGlobalSection
+EndGlobal

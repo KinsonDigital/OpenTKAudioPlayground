@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MP3Sharp" Version="1.0.5" />
+    <PackageReference Include="NAudio" Version="1.10.0" />
+    <PackageReference Include="OpenTK" Version="4.0.0-pre9.1" />
+    <PackageReference Include="System.Windows.Extensions" Version="4.7.0" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AudioReader\AudioReader.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Content\Sounds\cyberpunk-beat.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="openal32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
