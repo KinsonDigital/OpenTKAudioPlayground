@@ -12,9 +12,10 @@
   <ItemGroup>
     <PackageReference Include="MP3Sharp" Version="1.0.5" />
     <PackageReference Include="NAudio" Version="1.10.0" />
+    <PackageReference Include="NLayer" Version="1.13.0" />
+    <PackageReference Include="NVorbis" Version="0.10.1" />
     <PackageReference Include="OpenTK" Version="4.0.0-pre9.1" />
     <PackageReference Include="System.Windows.Extensions" Version="4.7.0" />
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.11" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,10 +23,49 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Content\Sounds\ceramic-tube.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sounds\ceramic-tube.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Sounds\cyberpunk-beat.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Sounds\lazer.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sounds\lazer.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sounds\rick-drum.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sounds\rick-drum.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sounds\snare.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sounds\snare.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sounds\the-plan.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sounds\tone.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sounds\tone.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Sounds\Where The Dead Ships Dwell.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sounds\Where The Dead Ships Dwell.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Sounds\Where The Dead Ships Dwell.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="openal32.dll">

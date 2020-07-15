@@ -6,52 +6,169 @@ using System.Media;
 using System.IO;
 using System.Reflection;
 using NAudio.Wave;
+using NLayer;
+using System.Text;
+using NVorbis;
+using System.Reflection.Metadata.Ecma335;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace OpenTKAudioPlayground
 {
     public class Program
     {
+		private static Task _getTimeTask;
+		private static CancellationTokenSource _taskTokenSource;
 		private static string BASE_PATH = $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\";
 		private static string CONTENT_PATH = $@"{BASE_PATH}Content\Sounds\";
+		private static Sound _sound;
 
         public static unsafe void Main(string[] args)
         {
-			var waveFilePath = $"{CONTENT_PATH}cyberpunk-beat.wav";
-			var mp3FilePath = $"{CONTENT_PATH}Where The Dead Ships Dwell.mp3";
+            //var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.wav";
+            //var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.mp3";
+            var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.ogg";
+            //var fileName = $"{CONTENT_PATH}lazer.ogg";
+            //var fileName = $"{CONTENT_PATH}lazer.mp3";
+            //var fileName = $"{CONTENT_PATH}the-plan.ogg";
+            //var fileName = $"{CONTENT_PATH}ceramic-tube.wav";
+            //var fileName = $"{CONTENT_PATH}ceramic-tube.mp3";
+            //var fileName = $"{CONTENT_PATH}snare.wav";
+            //var fileName = $"{CONTENT_PATH}snare.mp3";
+            //var fileName = $"{CONTENT_PATH}tone.wav";
+            //var fileName = $"{CONTENT_PATH}tone.mp3";
+            //var fileName = $"{CONTENT_PATH}rick-drum.wav";
+			//var fileName = $"{CONTENT_PATH}rick-drum.ogg";
 
 			var command = string.Empty;
-			var sound = new Sound(mp3FilePath);
+			_sound = new Sound(fileName);
 
-			while(command != "q")
+			Console.WriteLine("Press 'play' to play sound and 'pause' to pause, and 'q' to quit");
+			Console.WriteLine("To set the time in the sound to skip to, ust the 'set-time' command.\n\tTime value sound be mm:s");
+			Console.WriteLine();
+
+			while (command != "q")
             {
-				Console.WriteLine("Press 'play' to play sound and 'pause' to pause, and 'q' to quit");
-
 				command = Console.ReadLine();
 
                 switch (command)
                 {
 					case "q":
+						_sound.Dispose();
 						break;
 					case "play":
-						sound.Play();
+						_sound.Play();
 						break;
 					case "pause":
-						sound.Pause();
+						_sound.Pause();
+						break;
+					case "stop":
+						_sound.Stop();
+						break;
+					case "reset":
+						_sound.Reset();
+						break;
+					case "get-setting looping":
+						Console.WriteLine(_sound.IsLooping);
+						break;
+					case "set-setting looping true":
+						var loopingTrueSections = command.Split(' ');
+
+						if (loopingTrueSections[2].ToLower() != "true")
+                        {
+							Console.WriteLine($"The looping value of {loopingTrueSections[2]} is not valid.");
+							break;
+                        }
+
+						_sound.IsLooping = true;
+						break;
+					case "set-setting looping false":
+						var loopingFalseSections = command.Split(' ');
+
+						if (loopingFalseSections[2].ToLower() != "false")
+						{
+							Console.WriteLine($"The looping value of {loopingFalseSections[2]} is not valid.");
+							break;
+						}
+
+						_sound.IsLooping = true;
+						break;
+					case "get-time":
+						StartGetTimeTask();
+						break;
+					case "stop-time":
+						_taskTokenSource.Cancel();
 						break;
 					default:
-						Console.WriteLine("Command not recognized.");
+						if (command.StartsWith("set-time"))
+						{
+							var setTimeSections = command.Split(' ');
+
+							if (setTimeSections.Length < 2 || !setTimeSections[1].Contains(':'))
+							{
+								Console.WriteLine("Time value not correct.  Express time value as 'mm:s'");
+								Console.WriteLine();
+							}
+
+							var timeSections = setTimeSections[1].Split(':');
+
+							if (timeSections.Length < 2)
+                            {
+								Console.WriteLine("Time value not correct.  Express time value as 'mm:s'");
+								Console.WriteLine();
+							}
+
+							var parseMinuteSuccess = int.TryParse(timeSections[0], out int minutes);
+
+							if (!parseMinuteSuccess)
+                            {
+								Console.WriteLine("Time value not correct.  Express time value as 'mm:s'");
+								Console.WriteLine();
+							}
+
+							var parseSecondSuccess = int.TryParse(timeSections[1], out int seconds);
+
+							if (!parseSecondSuccess)
+							{
+								Console.WriteLine("Time value not correct.  Express time value as 'mm:s'");
+								Console.WriteLine();
+							}
+
+							_sound.SetTimePosition((minutes * 60f) + seconds);
+						}
+						else
+                        {
+							Console.WriteLine("Command not recognized.");
+                        }
 						break;
                 }
 			}
 
-			sound.Dispose();
-			//UseOpenAL();
+			_sound.Dispose();
 		}
 
-
-		private static void LoadWavWindowsOnly()
+		private static void StartGetTimeTask()
         {
+			if (_getTimeTask != null)
+            {
+				_getTimeTask.Dispose();
+				_getTimeTask = null;
+            }
 
+			_taskTokenSource = new CancellationTokenSource();
+			_getTimeTask = new Task(() =>
+			{
+				while(!_taskTokenSource.IsCancellationRequested)
+                {
+					Thread.Sleep(800);
+
+					var seconds = _sound.GetSeconds();
+
+					Console.Title = $"Time: {seconds}";
+                }
+			}, _taskTokenSource.Token);
+
+			_getTimeTask.Start();
         }
 
 		private unsafe static void UseOpenAL()
@@ -110,6 +227,25 @@ namespace OpenTKAudioPlayground
 			}
 
 			device = ALDevice.Null;
+		}
+
+		private static void SaveDataAsCSV(float[] data)
+        {
+			var csvData = new StringBuilder();
+
+			for (int i = 0; i < data.Length; i++)
+			{
+				if (i % 2 == 0)
+				{
+					csvData.Append(data[i].ToString("0." + new string('#', 339)) + ",");
+				}
+				else
+				{
+					csvData.Append(data[i].ToString("0." + new string('#', 339)) + ",\r\n");
+				}
+			}
+
+			File.WriteAllText(@"C:\temp\mp3sharp-data.csv", csvData.ToString());
 		}
 
 		private static void PrintVersion()
