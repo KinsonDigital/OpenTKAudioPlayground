@@ -10,6 +10,8 @@ namespace OpenTKAudioPlayground
 
         public int SampleRate;
 
+        public int Channels;
+
         public AudioFormat Format;
 
         public float TotalSeconds;

@@ -65,6 +65,8 @@ namespace OpenTKAudioPlayground
                 case ".wav":
                     _mp3AndWaveSoundData = DecodeSound.LoadWaveFile(_fileName);
 
+                    //Helpers.SaveData(_mp3AndWaveSoundData.BufferData, 4, @"C:\Temp\tone-data.csv");
+
                     // Sends the buffer data to the sound card
                     AL.BufferData(_bufferId,
                                   MapFormat(_mp3AndWaveSoundData.Format),
@@ -78,6 +80,7 @@ namespace OpenTKAudioPlayground
             AL.Source(_sourceId, ALSourcei.Buffer, _bufferId);
         }
 
+        //TODO: Check that this is working
         public bool IsLooping
         {
             get

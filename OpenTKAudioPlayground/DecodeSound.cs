@@ -1,4 +1,4 @@
-﻿using MP3Sharp;
+using MP3Sharp;
 using NAudio.Wave;
 using NLayer;
 using NVorbis;
@@ -17,9 +17,6 @@ namespace OpenTKAudioPlayground
 {
 	internal static class DecodeSound
     {
-		private static string BASE_PATH = $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\";
-		private static string CONTENT_PATH = $@"{BASE_PATH}Content\Sounds\";
-
 		public static SoundStats<float> LoadNVorbisData(string fileName)//WORKS - Cross Plat
 		{
 			var result = new SoundStats<float>();
@@ -28,6 +25,7 @@ namespace OpenTKAudioPlayground
 
 			result.SampleRate = reader.SampleRate;
 			result.TotalSeconds = (float)reader.TotalTime.TotalSeconds;
+			result.Channels = reader.Channels;
 
 			var dataResult = new List<float>();
 
@@ -55,15 +53,20 @@ namespace OpenTKAudioPlayground
 
         public static SoundStats<byte> LoadMP3SharpData(string fileName) // WORKS - Cross Plat
 		{
+			//NOTE: the Mp3Sharp decoder library only deals with 16bit mp3 files.  Which is 99% of what is used now days anyways
 			var result = new SoundStats<byte>();
 
 			var reader = new MP3Stream(fileName);
 
 			result.SampleRate = reader.Frequency;
+			result.Channels = reader.ChannelCount;
 
 			var dataResult = new List<byte>();
 
-			byte[] buffer = new byte[reader.ChannelCount * reader.Frequency];
+			const byte bitsPerSample = 16;
+			const byte bytesPerSample = bitsPerSample / 8;
+
+			byte[] buffer = new byte[reader.ChannelCount * reader.Frequency * bytesPerSample];
 
 			while (reader.Read(buffer, 0, buffer.Length) > 0)
 			{
@@ -99,10 +102,11 @@ namespace OpenTKAudioPlayground
 
             var result = new SoundStats<byte>
             {
-                SampleRate = reader.WaveFormat.SampleRate
+                SampleRate = reader.WaveFormat.SampleRate,
+				Channels = reader.WaveFormat.Channels
             };
 
-            byte[] buffer = new byte[reader.WaveFormat.Channels * reader.WaveFormat.SampleRate];
+            byte[] buffer = new byte[reader.WaveFormat.Channels * reader.WaveFormat.SampleRate * (reader.WaveFormat.BitsPerSample / 8)];
 
 			while(reader.Read(buffer, 0, buffer.Length) > 0)
             {
@@ -145,19 +149,21 @@ namespace OpenTKAudioPlayground
             var result = new SoundStats<byte>
             {
                 SampleRate = reader.WaveFormat.SampleRate,
-				TotalSeconds = (float)reader.TotalTime.TotalSeconds
+				TotalSeconds = (float)reader.TotalTime.TotalSeconds,
+				Channels = reader.WaveFormat.Channels
             };
 
             var dataResult = new List<byte>();
 
-			byte[] buffer = new byte[reader.WaveFormat.Channels * reader.WaveFormat.SampleRate];
+			// Create buffer with enough space to hold all the required bytes 
+			byte[] buffer = new byte[reader.WaveFormat.Channels * reader.WaveFormat.SampleRate * (reader.WaveFormat.BitsPerSample / 8)];
 
 			while(reader.Read(buffer, 0, buffer.Length) > 0)
             {
-				dataResult.AddRange(buffer);
+                dataResult.AddRange(buffer);
             }
 
-			if (reader.WaveFormat.Channels == 1)
+            if (reader.WaveFormat.Channels == 1)
             {
 				if (reader.WaveFormat.BitsPerSample == 8)
                 {
