@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Net.Http.Headers;
 using OpenToolkit.Audio.OpenAL;
@@ -26,8 +26,8 @@ namespace OpenTKAudioPlayground
         public static unsafe void Main(string[] args)
         {
             //var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.wav";
-            //var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.mp3";
-            var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.ogg";
+            var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.mp3";
+            //var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.ogg";
             //var fileName = $"{CONTENT_PATH}lazer.ogg";
             //var fileName = $"{CONTENT_PATH}lazer.mp3";
             //var fileName = $"{CONTENT_PATH}the-plan.ogg";

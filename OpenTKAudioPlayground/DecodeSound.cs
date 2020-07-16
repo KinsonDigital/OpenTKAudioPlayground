@@ -2,6 +2,7 @@
 using NAudio.Wave;
 using NLayer;
 using NVorbis;
+using OpenToolkit.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -54,10 +55,14 @@ namespace OpenTKAudioPlayground
 			return result;
 		}
 
-        public static (byte[] buffer, int sampleRate, AudioFormat format) LoadMP3SharpData(string fileName) // WORKS - Cross Plat
+        public static SoundStats<byte> LoadMP3SharpData(string fileName) // WORKS - Cross Plat
 		{
+			var result = new SoundStats<byte>();
+
 			var reader = new MP3Stream(fileName);
-			
+
+			result.SampleRate = reader.Frequency;
+
 			var dataResult = new List<byte>();
 
 			byte[] buffer = new byte[reader.ChannelCount * reader.Frequency];
@@ -67,18 +72,22 @@ namespace OpenTKAudioPlayground
 				dataResult.AddRange(buffer);
 			}
 
-			AudioFormat format = default;
+			//TODO: Need to test this out with 8 bit.
+			//Will probably have to use the constant 4f for 16bit and 2f for 8bit
+			result.TotalSeconds = dataResult.Count / 4f / reader.Frequency;
 
 			if (reader.Format == SoundFormat.Pcm16BitMono)
             {
-				format = AudioFormat.Mono16;
+				result.Format = AudioFormat.Mono16;
             }
 			else if (reader.Format == SoundFormat.Pcm16BitStereo)
             {
-				format = AudioFormat.Stereo16;
+				result.Format = AudioFormat.Stereo16;
             }
 
-			return (dataResult.ToArray(), reader.Frequency, format);
+			result.BufferData = dataResult.ToArray();
+
+			return result;
 		}
 
 		public static (byte[] buffer, int sampleRate, AudioFormat format) LoadNAudioData(string fileName) // WORKS - Windows Only

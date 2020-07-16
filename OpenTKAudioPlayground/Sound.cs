@@ -1,4 +1,4 @@
-﻿using OpenToolkit.Audio.OpenAL;
+using OpenToolkit.Audio.OpenAL;
 using System;
 using NVorbis;
 using System.IO;
@@ -15,8 +15,9 @@ namespace OpenTKAudioPlayground
         private int _bufferId;
         private int _sourceId;
         private bool _isDisposed;
-        private SoundStats<float> _soundStats;
+        private SoundStats<float> _oggSoundData;
         private string _fileName;
+        private SoundStats<byte> _mp3SoundData;
 
         public Sound(string fileName)
         {
@@ -41,18 +42,23 @@ namespace OpenTKAudioPlayground
             switch (Path.GetExtension(_fileName))
             {
                 case ".ogg":
-                    _soundStats = DecodeSound.LoadNVorbisData(_fileName);
+                    _oggSoundData = DecodeSound.LoadNVorbisData(_fileName);
 
-                    UploadSoundData();
+                    AL.BufferData(_bufferId,
+                                  MapFormat(_oggSoundData.Format),
+                                  _oggSoundData.BufferData,
+                                  _oggSoundData.BufferData.Length * sizeof(float),
+                                  _oggSoundData.SampleRate);
 
                     break;
                 case ".mp3":
-                    var (mp3Buffer, mp3SampleRate, mp3Format) = DecodeSound.LoadMP3SharpData(_fileName);
+                    _mp3SoundData = DecodeSound.LoadMP3SharpData(_fileName);
 
-                    var mp3ALFormat = MapFormat(mp3Format);
-
-                    // Sends the buffer data to the sound card
-                    AL.BufferData(_bufferId, mp3ALFormat, mp3Buffer, mp3Buffer.Length, mp3SampleRate);
+                    AL.BufferData(_bufferId,
+                                  MapFormat(_mp3SoundData.Format),
+                                  _mp3SoundData.BufferData,
+                                  _mp3SoundData.BufferData.Length,
+                                  _mp3SoundData.SampleRate);
                     break;
                 case ".wav":
                     var (wavBuffer, wavSampleRate, wavFormat) = DecodeSound.LoadWaveFile(_fileName);
@@ -95,8 +101,22 @@ namespace OpenTKAudioPlayground
             // Prevent negative number
             seconds = seconds < 0f ? 0.0f : seconds;
 
+            var extension = Path.GetExtension(_fileName);
+
             // Do not go past the end of the total sound effect time
-            seconds = seconds > _soundStats.TotalSeconds ? _soundStats.TotalSeconds : seconds;
+            switch (extension)
+            {
+                case ".ogg":
+                    seconds = seconds > _oggSoundData.TotalSeconds ? _oggSoundData.TotalSeconds : seconds;
+                    break;
+                case ".mp3":
+                    seconds = seconds > _mp3SoundData.TotalSeconds ? _mp3SoundData.TotalSeconds : seconds;
+                    break;
+                case ".wav":
+                    throw new NotImplementedException();
+                default:
+                    throw new Exception($"Unsupported file type of '{Path.GetExtension(_fileName)}'");
+            }
 
             AL.Source(_sourceId, ALSourcef.SecOffset, seconds);
         }
@@ -145,7 +165,7 @@ namespace OpenTKAudioPlayground
         private void UploadSoundData()
         {
             // Sends the buffer data to the sound card
-            AL.BufferData(_bufferId, MapFormat(_soundStats.Format), _soundStats.BufferData, _soundStats.BufferData.Length * sizeof(float), _soundStats.SampleRate);
+            AL.BufferData(_bufferId, MapFormat(_oggSoundData.Format), _oggSoundData.BufferData, _oggSoundData.BufferData.Length * sizeof(float), _oggSoundData.SampleRate);
         }
 
         private ALFormat MapFormat(AudioFormat format)
