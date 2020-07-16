@@ -145,7 +145,7 @@ namespace OpenTKAudioPlayground
         private void UploadSoundData()
         {
             // Sends the buffer data to the sound card
-            AL.BufferData(_bufferId, MapFormat(_soundStats.Format), _soundStats.BufferData, _soundStats.BufferData.Length, _soundStats.SampleRate);
+            AL.BufferData(_bufferId, MapFormat(_soundStats.Format), _soundStats.BufferData, _soundStats.BufferData.Length * sizeof(float), _soundStats.SampleRate);
         }
 
         private ALFormat MapFormat(AudioFormat format)
