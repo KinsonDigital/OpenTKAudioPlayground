@@ -19,8 +19,8 @@ namespace OpenTKAudioPlayground
     {
 		private static Task _getTimeTask;
 		private static CancellationTokenSource _taskTokenSource;
-		private static string BASE_PATH = $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\";
-		private static string CONTENT_PATH = $@"{BASE_PATH}Content\Sounds\";
+		private static string BASE_PATH = $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}{(Environment.OSVersion.Platform == PlatformID.Unix ? "/" : "\\")}";
+		private static string CONTENT_PATH = Environment.OSVersion.Platform == PlatformID.Unix ? $@"{BASE_PATH}Content/Sounds/" : $@"{BASE_PATH}Content\Sounds\";
 		private static Sound _sound;
 
         public static unsafe void Main(string[] args)
