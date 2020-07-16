@@ -38,6 +38,9 @@
     <None Update="Content\Sounds\lazer.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Sounds\rick-drum.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Sounds\rick-drum.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
