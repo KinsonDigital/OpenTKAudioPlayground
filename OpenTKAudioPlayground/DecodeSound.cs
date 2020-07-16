@@ -38,8 +38,6 @@ namespace OpenTKAudioPlayground
 				dataResult.AddRange(buffer);
             }
 
-			AudioFormat format = default;
-
             switch (reader.Channels)
             {
 				case 1:
@@ -90,60 +88,64 @@ namespace OpenTKAudioPlayground
 			return result;
 		}
 
-		public static (byte[] buffer, int sampleRate, AudioFormat format) LoadNAudioData(string fileName) // WORKS - Windows Only
+		public static SoundStats<byte> LoadNAudioData(string fileName) // WORKS - Windows Only
 		{
 			var reader = new Mp3FileReader(fileName);
 
 			var dataResult = new List<byte>();
 
-			byte[] buffer = new byte[reader.WaveFormat.Channels * reader.WaveFormat.SampleRate];
+            var result = new SoundStats<byte>
+            {
+                SampleRate = reader.WaveFormat.SampleRate
+            };
+
+            byte[] buffer = new byte[reader.WaveFormat.Channels * reader.WaveFormat.SampleRate];
 
 			while(reader.Read(buffer, 0, buffer.Length) > 0)
             {
 				dataResult.AddRange(buffer);
             }
 
-			AudioFormat format = default;
-
 			if (reader.WaveFormat.Channels == 1)
 			{
 				if (reader.WaveFormat.BitsPerSample == 8)
 				{
-					format = AudioFormat.Mono8;
+					result.Format = AudioFormat.Mono8;
 				}
 				else if (reader.WaveFormat.BitsPerSample == 16)
 				{
-					format = AudioFormat.Mono16;
-				}
-				else if (reader.WaveFormat.BitsPerSample == 32)
-				{
-					format = AudioFormat.Mono32Float;
+					result.Format = AudioFormat.Mono16;
 				}
 			}
 			else if (reader.WaveFormat.Channels == 2)
 			{
 				if (reader.WaveFormat.BitsPerSample == 8)
 				{
-					format = AudioFormat.Stereo8;
+					result.Format = AudioFormat.Stereo8;
 				}
 				else if (reader.WaveFormat.BitsPerSample == 16)
 				{
-					format = AudioFormat.Stereo16;
-				}
-				else if (reader.WaveFormat.BitsPerSample == 32)
-				{
-					format = AudioFormat.StereoFloat32;
+					result.Format = AudioFormat.Stereo16;
 				}
 			}
 
-			return (dataResult.ToArray(), reader.WaveFormat.SampleRate, format);
+			result.BufferData = dataResult.ToArray();
+
+
+			return result;
 		}
 		
-		public static (byte[] buffer, int sampleRate, AudioFormat format) LoadWaveFile(string fileName) // WORKS - Cross Plat
+		public static SoundStats<byte> LoadWaveFile(string fileName) // WORKS - Cross Plat
         {
 			var reader = new ARWaveReader(fileName);
 
-			var dataResult = new List<byte>();
+            var result = new SoundStats<byte>
+            {
+                SampleRate = reader.WaveFormat.SampleRate,
+				TotalSeconds = (float)reader.TotalTime.TotalSeconds
+            };
+
+            var dataResult = new List<byte>();
 
 			byte[] buffer = new byte[reader.WaveFormat.Channels * reader.WaveFormat.SampleRate];
 
@@ -151,41 +153,41 @@ namespace OpenTKAudioPlayground
             {
 				dataResult.AddRange(buffer);
             }
-
-			AudioFormat format = default;
 
 			if (reader.WaveFormat.Channels == 1)
             {
 				if (reader.WaveFormat.BitsPerSample == 8)
                 {
-					format = AudioFormat.Mono8;
+					result.Format = AudioFormat.Mono8;
                 }
 				else if (reader.WaveFormat.BitsPerSample == 16)
 				{
-					format = AudioFormat.Mono16;
+					result.Format = AudioFormat.Mono16;
 				}
 				else if (reader.WaveFormat.BitsPerSample == 32)
 				{
-					format = AudioFormat.Mono32Float;
+					result.Format = AudioFormat.Mono32Float;
 				}
 			}
 			else if (reader.WaveFormat.Channels == 2)
             {
 				if (reader.WaveFormat.BitsPerSample == 8)
 				{
-					format = AudioFormat.Stereo8;
+					result.Format = AudioFormat.Stereo8;
 				}
 				else if (reader.WaveFormat.BitsPerSample == 16)
 				{
-					format = AudioFormat.Stereo16;
+					result.Format = AudioFormat.Stereo16;
 				}
 				else if (reader.WaveFormat.BitsPerSample == 32)
 				{
-					format = AudioFormat.StereoFloat32;
+					result.Format = AudioFormat.StereoFloat32;
 				}
 			}
 
-			return (dataResult.ToArray(), reader.WaveFormat.SampleRate, format);
+			result.BufferData = dataResult.ToArray();
+
+			return result;
 		}
 	}
 }

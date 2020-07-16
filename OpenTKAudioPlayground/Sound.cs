@@ -17,7 +17,7 @@ namespace OpenTKAudioPlayground
         private bool _isDisposed;
         private SoundStats<float> _oggSoundData;
         private string _fileName;
-        private SoundStats<byte> _mp3SoundData;
+        private SoundStats<byte> _mp3AndWaveSoundData;
 
         public Sound(string fileName)
         {
@@ -52,21 +52,23 @@ namespace OpenTKAudioPlayground
 
                     break;
                 case ".mp3":
-                    _mp3SoundData = DecodeSound.LoadMP3SharpData(_fileName);
+                    _mp3AndWaveSoundData = DecodeSound.LoadMP3SharpData(_fileName);
 
                     AL.BufferData(_bufferId,
-                                  MapFormat(_mp3SoundData.Format),
-                                  _mp3SoundData.BufferData,
-                                  _mp3SoundData.BufferData.Length,
-                                  _mp3SoundData.SampleRate);
+                                  MapFormat(_mp3AndWaveSoundData.Format),
+                                  _mp3AndWaveSoundData.BufferData,
+                                  _mp3AndWaveSoundData.BufferData.Length,
+                                  _mp3AndWaveSoundData.SampleRate);
                     break;
                 case ".wav":
-                    var (wavBuffer, wavSampleRate, wavFormat) = DecodeSound.LoadWaveFile(_fileName);
-
-                    var wavALFormat = MapFormat(wavFormat);
+                    _mp3AndWaveSoundData = DecodeSound.LoadWaveFile(_fileName);
 
                     // Sends the buffer data to the sound card
-                    AL.BufferData(_bufferId, wavALFormat, wavBuffer, wavBuffer.Length, wavSampleRate);
+                    AL.BufferData(_bufferId,
+                                  MapFormat(_mp3AndWaveSoundData.Format),
+                                  _mp3AndWaveSoundData.BufferData,
+                                  _mp3AndWaveSoundData.BufferData.Length,
+                                  _mp3AndWaveSoundData.SampleRate);
                     break;
             }
 
@@ -110,10 +112,9 @@ namespace OpenTKAudioPlayground
                     seconds = seconds > _oggSoundData.TotalSeconds ? _oggSoundData.TotalSeconds : seconds;
                     break;
                 case ".mp3":
-                    seconds = seconds > _mp3SoundData.TotalSeconds ? _mp3SoundData.TotalSeconds : seconds;
-                    break;
                 case ".wav":
-                    throw new NotImplementedException();
+                    seconds = seconds > _mp3AndWaveSoundData.TotalSeconds ? _mp3AndWaveSoundData.TotalSeconds : seconds;
+                    break;
                 default:
                     throw new Exception($"Unsupported file type of '{Path.GetExtension(_fileName)}'");
             }
