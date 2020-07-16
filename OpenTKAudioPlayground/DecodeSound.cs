@@ -72,6 +72,9 @@ namespace OpenTKAudioPlayground
 
 			//TODO: Need to test this out with 8 bit.
 			//Will probably have to use the constant 4f for 16bit and 2f for 8bit
+
+			//This calculate is also not completely accurate.  It comes out to 1 second longer
+			//thent he sound actually is.
 			result.TotalSeconds = dataResult.Count / 4f / reader.Frequency;
 
 			if (reader.Format == SoundFormat.Pcm16BitMono)

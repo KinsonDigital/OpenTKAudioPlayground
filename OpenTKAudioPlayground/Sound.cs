@@ -7,6 +7,8 @@ using NAudio.Wave;
 
 namespace OpenTKAudioPlayground
 {
+    //TODO: Add error detection using AL.GetError()
+
     public class Sound : IDisposable
     {
         private ALDevice _device;
@@ -98,6 +100,7 @@ namespace OpenTKAudioPlayground
 
         public void Reset() => AL.SourceRewind(_sourceId);
 
+        //TODO: Create overloads that take TimeSpan, milliseconds, minutes, and combination of those
         public void SetTimePosition(float seconds)
         {
             // Prevent negative number
@@ -122,7 +125,11 @@ namespace OpenTKAudioPlayground
             AL.Source(_sourceId, ALSourcef.SecOffset, seconds);
         }
 
-        public float GetSeconds()
+        /// <summary>
+        /// Gets the current time position in seconds.
+        /// </summary>
+        /// <returns>The position in time.</returns>
+        public float GetCurrentTimePosition()
         {
             AL.GetSource(_sourceId, ALSourcef.SecOffset, out float currentSeconds);
             
@@ -162,12 +169,6 @@ namespace OpenTKAudioPlayground
         }
 
         ~Sound() => Dispose(disposing: false);
-
-        private void UploadSoundData()
-        {
-            // Sends the buffer data to the sound card
-            AL.BufferData(_bufferId, MapFormat(_oggSoundData.Format), _oggSoundData.BufferData, _oggSoundData.BufferData.Length * sizeof(float), _oggSoundData.SampleRate);
-        }
 
         private ALFormat MapFormat(AudioFormat format)
         {

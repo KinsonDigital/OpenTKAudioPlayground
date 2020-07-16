@@ -162,7 +162,7 @@ namespace OpenTKAudioPlayground
                 {
 					Thread.Sleep(800);
 
-					var seconds = _sound.GetSeconds();
+					var seconds = _sound.GetCurrentTimePosition();
 
 					Console.Title = $"Time: {seconds}";
                 }
