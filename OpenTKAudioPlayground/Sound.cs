@@ -95,6 +95,27 @@ namespace OpenTKAudioPlayground
             }
         }
 
+        public float Volume
+        {
+            get
+            {
+                AL.GetSource(_sourceId, ALSourcef.Gain, out float result);
+
+                return result;
+            }
+            set
+            {
+                //Indicate the gain (volume amplification) applied. Type: float. Range: [0.0f - ?]
+                //A value of 1.0 means un-attenuated/unchanged. Each division by 2 equals an
+                //attenuation of -6dB. Each multiplicaton with 2 equals an amplification of +6dB.
+                //A value of 0.0f is meaningless with respect to a logarithmic scale; it is interpreted
+                //as zero volume - the channel is effectively disabled.
+                value = value > 1f ? 1f : value;
+
+                AL.Source(_sourceId, ALSourcef.Gain, value);
+            }
+        }
+
         public void Play() => AL.SourcePlay(_sourceId);
 
         public void Pause() => AL.SourcePause(_sourceId);

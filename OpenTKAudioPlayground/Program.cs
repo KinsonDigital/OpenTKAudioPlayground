@@ -12,6 +12,7 @@ using NVorbis;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using System.Threading;
+using NAudio.Wave.SampleProviders;
 
 namespace OpenTKAudioPlayground
 {
@@ -25,23 +26,23 @@ namespace OpenTKAudioPlayground
 
         public static unsafe void Main(string[] args)
         {
-			//var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.wav";
-			//var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.mp3";
-			//var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.ogg";
-			//var fileName = $"{CONTENT_PATH}lazer.mp3";
-			//var fileName = $"{CONTENT_PATH}lazer.ogg";
-			//var fileName = $"{CONTENT_PATH}the-plan.ogg";
-			//var fileName = $"{CONTENT_PATH}ceramic-tube.wav";
-			//var fileName = $"{CONTENT_PATH}ceramic-tube.mp3";
-			//var fileName = $"{CONTENT_PATH}snare.wav";
-			//var fileName = $"{CONTENT_PATH}snare.mp3";
-			//var fileName = $"{CONTENT_PATH}tone.wav";
-			//var fileName = $"{CONTENT_PATH}tone.mp3";
-			var fileName = $"{CONTENT_PATH}rick-drum.wav";
-			//var fileName = $"{CONTENT_PATH}rick-drum.mp3";
-			//var fileName = $"{CONTENT_PATH}rick-drum.ogg";
+            //var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.wav";//WORKS
+            //var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.mp3";
+            //var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.ogg";
+            //var fileName = $"{CONTENT_PATH}lazer.mp3";
+            //var fileName = $"{CONTENT_PATH}lazer.ogg";
+            //var fileName = $"{CONTENT_PATH}the-plan.ogg";
+            //var fileName = $"{CONTENT_PATH}ceramic-tube.wav";//WORKS
+            //var fileName = $"{CONTENT_PATH}ceramic-tube.mp3";
+            var fileName = $"{CONTENT_PATH}snare.wav";//WORKS
+            //var fileName = $"{CONTENT_PATH}snare.mp3";
+            //var fileName = $"{CONTENT_PATH}tone.wav";//WORKS
+            //var fileName = $"{CONTENT_PATH}tone.mp3";
+            //var fileName = $"{CONTENT_PATH}rick-drum.wav";//WORKS
+            //var fileName = $"{CONTENT_PATH}rick-drum.mp3";
+            //var fileName = $"{CONTENT_PATH}rick-drum.ogg";
 
-			var command = string.Empty;
+            var command = string.Empty;
 			_sound = new Sound(fileName);
 
 			Console.WriteLine("Press 'play' to play sound and 'pause' to pause, and 'q' to quit");
@@ -69,6 +70,9 @@ namespace OpenTKAudioPlayground
 					case "reset":
 						_sound.Reset();
 						break;
+					case "get-setting volume":
+						Console.WriteLine($"Volume: {_sound.Volume}");
+						break;
 					case "get-setting looping":
 						Console.WriteLine(_sound.IsLooping);
 						break;
@@ -92,7 +96,7 @@ namespace OpenTKAudioPlayground
 							break;
 						}
 
-						_sound.IsLooping = true;
+						_sound.IsLooping = false;
 						break;
 					case "get-time":
 						StartGetTimeTask();
@@ -137,6 +141,30 @@ namespace OpenTKAudioPlayground
 
 							_sound.SetTimePosition((minutes * 60f) + seconds);
 						}
+						else if (command.StartsWith("set-volume"))
+                        {
+							var setVolumeSections = command.Split(' ');
+
+							if (setVolumeSections.Length < 2)
+                            {
+								Console.WriteLine("Volume value not correct.  Express as floating point number.");
+								Console.WriteLine();
+                            }
+							else
+                            {
+								var volumeParseSuccess = float.TryParse(setVolumeSections[1], out float volume);
+
+								if (volumeParseSuccess)
+                                {
+									_sound.Volume = volume;
+                                }
+								else
+                                {
+									Console.WriteLine("Volume value not correct.  Express as floating point number.");
+									Console.WriteLine();
+								}
+                            }
+                        }
 						else
                         {
 							Console.WriteLine("Command not recognized.");

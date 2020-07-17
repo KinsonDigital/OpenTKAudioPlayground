@@ -17,7 +17,7 @@ namespace OpenTKAudioPlayground
 {
 	internal static class DecodeSound
     {
-		public static SoundStats<float> LoadNVorbisData(string fileName)//WORKS - Cross Plat
+		public static SoundStats<float> LoadNVorbisData(string fileName)
 		{
 			var result = new SoundStats<float>();
 
@@ -51,7 +51,7 @@ namespace OpenTKAudioPlayground
 			return result;
 		}
 
-        public static SoundStats<byte> LoadMP3SharpData(string fileName) // WORKS - Cross Plat
+        public static SoundStats<byte> LoadMP3SharpData(string fileName)
 		{
 			//NOTE: the Mp3Sharp decoder library only deals with 16bit mp3 files.  Which is 99% of what is used now days anyways
 			var result = new SoundStats<byte>();
@@ -94,7 +94,7 @@ namespace OpenTKAudioPlayground
 			return result;
 		}
 
-		public static SoundStats<byte> LoadNAudioData(string fileName) // WORKS - Windows Only
+		public static SoundStats<byte> LoadNAudioData(string fileName)
 		{
 			var reader = new Mp3FileReader(fileName);
 
