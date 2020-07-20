@@ -23,52 +23,37 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Content\Sounds\ceramic-tube.mp3">
+    <None Update="Content\Sounds\mp3\dance-16-mono.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Sounds\ceramic-tube.wav">
+    <None Update="Content\Sounds\mp3\stramloop-16-stereo.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Sounds\cyberpunk-beat.wav">
+    <None Update="Content\Sounds\ogg\effectdrum-16-stereo.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Sounds\lazer.mp3">
+    <None Update="Content\Sounds\ogg\zap-16-mono.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Sounds\lazer.ogg">
+    <None Update="Content\Sounds\wav\crash-8-mono.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Sounds\rick-drum.mp3">
+    <None Update="Content\Sounds\wav\drum-16-mono.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Sounds\rick-drum.ogg">
+    <None Update="Content\Sounds\wav\snare-16-stereo.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Sounds\rick-drum.wav">
+    <None Update="Content\Sounds\wav\whoosh-8-stereo.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Sounds\snare.mp3">
+    <None Update="Content\Sounds\mp3\deadships-16-stereo.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Sounds\snare.wav">
+    <None Update="Content\Sounds\ogg\deadships-16-stereo.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Content\Sounds\the-plan.ogg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\Sounds\tone.mp3">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\Sounds\tone.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\Sounds\Where The Dead Ships Dwell.mp3">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\Sounds\Where The Dead Ships Dwell.ogg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Content\Sounds\Where The Dead Ships Dwell.wav">
+    <None Update="Content\Sounds\wav\deadships-16-stereo.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="openal32.dll">

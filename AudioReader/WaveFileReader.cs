@@ -52,7 +52,7 @@ namespace AudioReader
                 dataChunkLength = chunkReader.DataChunkLength;
                 ExtraChunks = chunkReader.RiffChunks;
             }
-            catch
+            catch(Exception ex)
             {
                 if (ownInput)
                 {

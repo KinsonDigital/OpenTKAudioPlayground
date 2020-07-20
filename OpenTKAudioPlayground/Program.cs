@@ -13,9 +13,34 @@ using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using System.Threading;
 using NAudio.Wave.SampleProviders;
+using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
+using System.Linq;
+using System.IO.Pipes;
+using System.Runtime.CompilerServices;
+using OpenToolkit.Windowing.Common;
 
 namespace OpenTKAudioPlayground
 {
+	public enum BitDepth
+    {
+		Bit8,
+		Bit16,
+    }
+
+	public enum AudioType
+    {
+		wav,
+		mp3,
+		ogg,
+    }
+
+	public enum ChannelType
+    {
+		Mono,
+		Stereo,
+    }
+
     public class Program
     {
 		private static Task _getTimeTask;
@@ -23,29 +48,46 @@ namespace OpenTKAudioPlayground
 		private static string BASE_PATH = $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}{(Environment.OSVersion.Platform == PlatformID.Unix ? "/" : "\\")}";
 		private static string CONTENT_PATH = Environment.OSVersion.Platform == PlatformID.Unix ? $@"{BASE_PATH}Content/Sounds/" : $@"{BASE_PATH}Content\Sounds\";
 		private static Sound _sound;
+		private static List<string> _soundNames = new List<string>();
 
-        public static unsafe void Main(string[] args)
+
+		public static unsafe void Main(string[] args)
         {
-            //var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.wav";//WORKS
-            //var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.mp3";
-            //var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.ogg";
-            //var fileName = $"{CONTENT_PATH}lazer.mp3";
-            //var fileName = $"{CONTENT_PATH}lazer.ogg";
-            //var fileName = $"{CONTENT_PATH}the-plan.ogg";
-            //var fileName = $"{CONTENT_PATH}ceramic-tube.wav";//WORKS
-            //var fileName = $"{CONTENT_PATH}ceramic-tube.mp3";
-            var fileName = $"{CONTENT_PATH}snare.wav";//WORKS
-            //var fileName = $"{CONTENT_PATH}snare.mp3";
-            //var fileName = $"{CONTENT_PATH}tone.wav";//WORKS
-            //var fileName = $"{CONTENT_PATH}tone.mp3";
-            //var fileName = $"{CONTENT_PATH}rick-drum.wav";//WORKS
-            //var fileName = $"{CONTENT_PATH}rick-drum.mp3";
-            //var fileName = $"{CONTENT_PATH}rick-drum.ogg";
+			//var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.wav";//WORKS
+			//var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.mp3";//WORKS
+			//var fileName = $"{CONTENT_PATH}Where The Dead Ships Dwell.ogg";//WORKS
+			//var fileName = $"{CONTENT_PATH}lazer.mp3";//WORKS
+			//var fileName = $"{CONTENT_PATH}lazer.ogg";//WORKS
+			//var fileName = $"{CONTENT_PATH}the-plan.ogg";//WORKS
+			//var fileName = $"{CONTENT_PATH}ceramic-tube.wav";//WORKS
+			//var fileName = $"{CONTENT_PATH}ceramic-tube.mp3";//WORKS
+			//var fileName = $"{CONTENT_PATH}snare.wav";//WORKS
+			//var fileName = $"{CONTENT_PATH}snare.mp3";//WORKS
+			//var fileName = $"{CONTENT_PATH}tone.wav";//WORKS
+			//var fileName = $"{CONTENT_PATH}tone.mp3";//WORKS
+			//var fileName = $"{CONTENT_PATH}rick-drum.wav";//WORKS
+			//var fileName = $"{CONTENT_PATH}rick-drum.mp3";//WORKS
+			//var fileName = $"{CONTENT_PATH}rick-drum.ogg";//WORKS
 
-            var command = string.Empty;
-			_sound = new Sound(fileName);
+			var command = string.Empty;
 
-			Console.WriteLine("Press 'play' to play sound and 'pause' to pause, and 'q' to quit");
+			_soundNames.AddRange(new [] {
+				GetFilePath("dance", BitDepth.Bit16, AudioType.mp3, ChannelType.Mono),
+				GetFilePath("deadships", BitDepth.Bit16, AudioType.mp3, ChannelType.Stereo),
+				GetFilePath("stramloop", BitDepth.Bit16, AudioType.mp3, ChannelType.Stereo),
+				GetFilePath("deadships", BitDepth.Bit16, AudioType.ogg, ChannelType.Stereo),
+				GetFilePath("effectdrum", BitDepth.Bit16, AudioType.ogg, ChannelType.Stereo),
+				GetFilePath("zap", BitDepth.Bit16, AudioType.ogg, ChannelType.Mono),
+				GetFilePath("crash", BitDepth.Bit8, AudioType.wav, ChannelType.Mono),
+				GetFilePath("deadships", BitDepth.Bit16, AudioType.wav, ChannelType.Stereo),
+				GetFilePath("drum", BitDepth.Bit16, AudioType.wav, ChannelType.Mono),
+				GetFilePath("snare", BitDepth.Bit16, AudioType.wav, ChannelType.Stereo),
+				GetFilePath("whoosh", BitDepth.Bit8, AudioType.wav, ChannelType.Stereo),
+			});
+
+            Sound _sound = null;
+
+            Console.WriteLine("Press 'play' to play sound and 'pause' to pause, and 'q' to quit");
 			Console.WriteLine("To set the time in the sound to skip to, ust the 'set-time' command.\n\tTime value sound be mm:s");
 			Console.WriteLine();
 
@@ -59,6 +101,12 @@ namespace OpenTKAudioPlayground
 						_sound.Dispose();
 						break;
 					case "play":
+						if (_sound is null)
+                        {
+							Console.WriteLine("You must load a song first.  Use 'get-names' to get a list of sound names.");
+							break;
+                        }
+
 						_sound.Play();
 						break;
 					case "pause":
@@ -69,6 +117,16 @@ namespace OpenTKAudioPlayground
 						break;
 					case "reset":
 						_sound.Reset();
+						break;
+					case "get-names":
+						Console.WriteLine("Names:");
+
+						var names = GetNames(true);
+
+						foreach (var name in names)
+						{
+							Console.WriteLine($"\t{Path.GetFileName(name)}");
+						}
 						break;
 					case "get-setting volume":
 						Console.WriteLine($"Volume: {_sound.Volume}");
@@ -103,6 +161,9 @@ namespace OpenTKAudioPlayground
 						break;
 					case "stop-time":
 						_taskTokenSource.Cancel();
+						break;
+					case "run-tests":
+						RunTests(_soundNames.ToArray());
 						break;
 					default:
 						if (command.StartsWith("set-time"))
@@ -165,6 +226,40 @@ namespace OpenTKAudioPlayground
 								}
                             }
                         }
+						else if (command.StartsWith("load"))
+                        {
+							var loadSections = command.Split(' ');
+
+							if (loadSections.Length < 2)
+							{
+								Console.WriteLine("The load command is not correct. Use the command 'load <name>:<type>'.  Types are wav, mp3 and ogg.");
+								Console.WriteLine();
+								break;
+							}
+
+							if (!loadSections[1].Contains(':'))
+							{
+								Console.WriteLine("The load command is not correct. Use the command 'load <name>:<type>'.  Types are wav, mp3 and ogg.");
+								Console.WriteLine();
+							}
+
+							var songTypeSections = loadSections[1].Split(':');
+
+							if (songTypeSections.Length < 2)
+							{
+								Console.WriteLine("The load command is not correct. Use the command 'load <name>:<type>'.  Types are wav, mp3 and ogg.");
+								Console.WriteLine();
+							}
+
+							var fileName = GetFilePath(songTypeSections[0], songTypeSections[1]);
+
+							Console.WriteLine($"Loading '{Path.GetFileName(fileName)}' . . .");
+
+							_sound = new Sound(fileName);
+
+							Console.WriteLine($"The sound file '{Path.GetFileName(fileName)}' loaded.");
+							Console.WriteLine();
+						}
 						else
                         {
 							Console.WriteLine("Command not recognized.");
@@ -174,6 +269,72 @@ namespace OpenTKAudioPlayground
 			}
 
 			_sound.Dispose();
+		}
+
+		private static void RunTests(string[] soundPaths)
+        {
+			var results = new Dictionary<string, bool>();
+
+			Console.WriteLine();
+			Console.WriteLine("Running sound tests . . .");
+			Console.WriteLine("Use the answers 'y' or 'n'");
+			Console.WriteLine();
+
+            foreach (var soundPath in soundPaths)
+            {
+				var soundFileName = Path.GetFileName(soundPath);
+
+				Sound sound = null;
+
+                try
+                {
+					Console.WriteLine($"Loading sound data for '{soundFileName}'");
+
+					sound = new Sound(soundPath);
+
+					Console.WriteLine($"Playing sound '{soundFileName}'");
+					sound.Play();
+
+					Console.Write($"Did you hear the sound '{soundFileName}'?  Yes(y) or No(n)?");
+
+					var answer = string.Empty;
+
+					while(string.IsNullOrEmpty(answer) || !new[] { "y", "n" }.Contains(answer))
+                    {
+						answer = Console.ReadLine();
+
+						//Interpret the answer
+						if (answer == "n" || answer == "y")
+                        {
+							results.Add($"The sound named '{soundFileName}' {(answer == "y" ? "played" : "did not play")}.", answer == "y");
+							break;
+                        }
+						else
+                        {
+							Console.WriteLine($"The answer '{answer}' is not recognized.  Please us 'y' or 'n'.");
+							Console.WriteLine();
+						}
+                    }
+                }
+                catch (Exception ex)
+                {
+					results.Add($"Issue running sound '{soundFileName}'\r\n\t{ex.Message}", false);
+                }
+
+				sound?.Dispose();
+            }
+
+			//Print the results
+			Console.WriteLine();
+
+            foreach (var result in results)
+            {
+				Console.ForegroundColor = result.Value ? ConsoleColor.Green : ConsoleColor.Red;
+				Console.Write($"{result.Key}\n");
+            }
+
+			Console.ForegroundColor = ConsoleColor.White;
+			Console.WriteLine();
 		}
 
 		private static void StartGetTimeTask()
@@ -200,82 +361,63 @@ namespace OpenTKAudioPlayground
 			_getTimeTask.Start();
         }
 
-		private unsafe static void UseOpenAL()
+		private static string[] GetNames(bool withTypes = false)
         {
-			//Initialize
-			var device = ALC.OpenDevice(null);
+			var result = new List<string>();
 
-			var attributes = new ALContextAttributes();
-			var context = ALC.CreateContext(device, attributes);
+			var currentFileList = new List<string>();
 
-			ALC.MakeContextCurrent(context);
+			string BuildName(string filePath)
+            {
+				var extension = Path.GetExtension(filePath).Replace(".", "");
+				var name = Path.GetFileNameWithoutExtension(filePath).Split('-')[0];
 
-			PrintVersion();
+                return $"{name}{(withTypes ? $" - ({extension})" : string.Empty)}";
+            }
 
-			Console.ReadKey();
+            foreach (var file in _soundNames)
+            {
+				result.Add(BuildName(file));
+            }
 
-			//Process
-			int bufferId;
-			int sourceId;
+			////Get wav names
+			//currentFileList = Directory.GetFiles($@"{CONTENT_PATH}\wav\", "*.wav").ToList();
+			//currentFileList.ForEach(f => result.Add(BuildName(f)));
 
-			bufferId = AL.GenBuffers(1)[0];
+			////Get mp3 names
+			//currentFileList = Directory.GetFiles($@"{CONTENT_PATH}\mp3\", "*.mp3").ToList();
+			//currentFileList.ForEach(f => result.Add(BuildName(f)));
 
-			sourceId = AL.GenSources(1)[0];
+			////Get ogg names
+			//currentFileList = Directory.GetFiles($@"{CONTENT_PATH}\ogg\", "*.ogg").ToList();
+			//currentFileList.ForEach(f => result.Add(BuildName(f)));
 
-			int sampleFreq = 44100;
+			return result.ToArray();
+        }
 
-			// Generate sound data
-			var sinData = CreateSoundData(sampleFreq);
-
-			// Sends the buffer data to the sound card
-			AL.BufferData(bufferId, ALFormat.Mono16, sinData, sinData.Length, sampleFreq);
-
-			// Bind the buffer to the source
-			AL.Source(sourceId, ALSourcei.Buffer, bufferId);
-
-			AL.Source(sourceId, ALSourceb.Looping, true);
-
-
-
-			//Play the source/sound
-			AL.SourcePlay(sourceId);
-
-			Console.ReadKey();
-
-			///Dispose
-			if (context != ALContext.Null)
-			{
-				ALC.MakeContextCurrent(ALContext.Null);
-				ALC.DestroyContext(context);
-			}
-			context = ALContext.Null;
-
-			if (device != IntPtr.Zero)
-			{
-				ALC.CloseDevice(device);
-			}
-
-			device = ALDevice.Null;
-		}
-
-		private static void SaveDataAsCSV(float[] data)
+		private static string GetFilePath(string name, BitDepth depth, AudioType audioType, ChannelType channelType)
         {
-			var csvData = new StringBuilder();
+			var result = CONTENT_PATH;
 
-			for (int i = 0; i < data.Length; i++)
-			{
-				if (i % 2 == 0)
-				{
-					csvData.Append(data[i].ToString("0." + new string('#', 339)) + ",");
-				}
-				else
-				{
-					csvData.Append(data[i].ToString("0." + new string('#', 339)) + ",\r\n");
-				}
-			}
+			var channelName = Enum.GetName(typeof(ChannelType), channelType).ToLower();
+			var folder = Enum.GetName(typeof(AudioType), audioType);
+			var extension = $".{Enum.GetName(typeof(AudioType), audioType)}";
+			var bitDepth = Enum.GetName(typeof(BitDepth), depth).Replace("Bit", "");
 
-			File.WriteAllText(@"C:\temp\mp3sharp-data.csv", csvData.ToString());
-		}
+			result += $@"{folder}\{name}-{bitDepth}-{channelName}{extension}";
+
+
+			return result;
+        }
+
+		private static string GetFilePath(string name, string type)
+        {
+			var files = Directory.GetFiles(CONTENT_PATH, "*.*", SearchOption.AllDirectories);
+
+			var result = files.Where(f => f.Contains(name) && Path.GetExtension(f).Contains(type)).FirstOrDefault();
+
+			return result;
+        }
 
 		private static void PrintVersion()
         {
@@ -285,25 +427,6 @@ namespace OpenTKAudioPlayground
 			Console.WriteLine(version);
 			Console.WriteLine(vendor);
 			Console.WriteLine(renderer);
-		}
-
-		public static short[] CreateSoundData(int sampleFreq)
-        {
-			double dt = 2 * Math.PI / sampleFreq;
-			double amp = 0.5;
-
-			int freq = 440;
-			var dataCount = sampleFreq / freq;
-
-			var sinData = new short[dataCount];
-
-			for (int i = 0; i < sinData.Length; ++i)
-			{
-				sinData[i] = (short)(amp * short.MaxValue * Math.Sin(i * dt * freq));
-			}
-
-
-			return sinData;
 		}
 	}
 }
